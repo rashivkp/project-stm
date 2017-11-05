@@ -60,10 +60,20 @@ class AllotmentView(ModelView):
                 }
             }
 
+
+
 admin = Admin(app, name='Rationshop', template_mode='bootstrap3')
 admin.add_view(ModelView(User, db.session))
 admin.add_view(ModelView(Item, db.session))
 admin.add_view(AllotmentView(Allotment, db.session))
+
+@app.route('/auth', methods=['POST'])
+def authenticate():
+    user = db.session.query(User).filter(User.name == request.form['name']).\
+            filter(User.password == request.form['password']).first()
+    if (user):
+        return user.name + ',' + user.number + ',' + user.address + ',' + user.category
+    return '0'
 
 if __name__ == '__main__':
     app.debug = True
